@@ -1,6 +1,8 @@
 package vpn
 
-import "github.com/zerops-io/zcli/src/daemonStorage"
+import (
+	"github.com/zerops-io/zcli/src/daemonStorage"
+)
 
 func (h *Handler) StopVpn() (err error) {
 	h.lock.Lock()
@@ -23,7 +25,7 @@ func (h *Handler) StopVpn() (err error) {
 	}
 
 	data := h.storage.Data()
-	err = h.cleanDns(data.DnsIp, localDnsManagement)
+	err = h.cleanDns(data.DnsIp, data.ClientIp, localDnsManagement)
 	if err != nil {
 		return err
 	}

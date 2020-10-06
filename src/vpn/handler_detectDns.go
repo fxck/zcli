@@ -4,11 +4,16 @@ import (
 	"os/exec"
 	"regexp"
 
+	"github.com/zerops-io/zcli/src/scutil"
 	"github.com/zerops-io/zcli/src/utils"
 	"github.com/zerops-io/zcli/src/utils/cmdRunner"
 )
 
 func (h *Handler) detectDns() (localDnsManagement, error) {
+
+	if utils.FileExists(scutil.BinaryLocation) {
+		return scutilDnsManagementFile, nil
+	}
 
 	if utils.FileExists(resolvFilePath) {
 		valid, err := isValidSystemdResolve(resolvFilePath)

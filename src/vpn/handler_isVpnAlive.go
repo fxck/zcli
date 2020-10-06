@@ -11,13 +11,12 @@ func (h *Handler) isVpnAlive(serverIp string) bool {
 	}
 
 	for i := 0; i < 3; i++ {
-		_, err := exec.Command("ping6", serverIp, "-c", "1").Output()
+		_, err := exec.Command("ping6", "-c", "1", serverIp).Output()
 		if err != nil {
 			continue
 		}
 
 		return true
 	}
-
 	return false
 }

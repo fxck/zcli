@@ -5,6 +5,5 @@ func (h *Handler) StatusVpn() bool {
 	defer h.lock.Unlock()
 
 	data := h.storage.Data()
-
 	return h.isVpnAlive(data.ServerIp)
 }

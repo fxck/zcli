@@ -7,6 +7,7 @@ require (
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/golang/protobuf v1.4.2
 	github.com/google/uuid v1.1.1
+	github.com/miekg/dns v1.1.31
 	github.com/mitchellh/mapstructure v1.2.2 // indirect
 	github.com/onsi/gomega v1.10.1
 	github.com/pelletier/go-toml v1.7.0 // indirect

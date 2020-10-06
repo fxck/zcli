@@ -4,6 +4,7 @@ package vpn
 
 import (
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"os/exec"
@@ -27,6 +28,7 @@ func (h *Handler) setVpn(selectedVpnAddress, privateKey string, response *zerops
 	}
 
 	re := regexp.MustCompile(`INFO: \((.*)\)`)
+	fmt.Println("??????", output)
 	submatches := re.FindSubmatch(output)
 	if len(submatches) != 2 {
 		return errors.New("vpn interface not found")

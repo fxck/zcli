@@ -15,10 +15,12 @@ type Handler struct {
 type Data struct {
 	ProjectId      string
 	ServerIp       string
+	VpnNetwork     string
 	GrpcApiAddress string
 	GrpcVpnAddress string
 	Token          string
 	DnsIp          []byte
+	ClientIp       []byte
 }
 
 func New(config Config) (*Handler, error) {

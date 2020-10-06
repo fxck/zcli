@@ -4,9 +4,8 @@ import (
 	"context"
 	"sync"
 
-	"github.com/zerops-io/zcli/src/i18n"
-
 	"github.com/spf13/cobra"
+	"github.com/zerops-io/zcli/src/i18n"
 )
 
 func daemonRunCmd() *cobra.Command {
@@ -30,7 +29,18 @@ func daemonRunCmd() *cobra.Command {
 
 			wg := sync.WaitGroup{}
 
-			vpn := createVpn(storage, logger)
+			dnsServer := createDnsServer()
+			wg.Add(1)
+			go func() {
+				defer wg.Done()
+				err := dnsServer.Run(ctx)
+				if err != nil {
+					logger.Error(err)
+					cancel()
+				}
+			}()
+
+			vpn := createVpn(storage, dnsServer, logger)
 			wg.Add(1)
 			go func() {
 				defer wg.Done()

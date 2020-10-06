@@ -4,7 +4,9 @@ package vpn
 
 import (
 	"errors"
+	"fmt"
 	"io/ioutil"
+	"net"
 	"os"
 	"os/exec"
 	"path"
@@ -15,10 +17,27 @@ import (
 	"github.com/zerops-io/zcli/src/zeropsVpnProtocol"
 )
 
+func getNewVpnInterfaceName() (string, error) {
+	for i := 0; i < 99; i++ {
+		interfaceName := fmt.Sprintf("wg%d", i)
+		_, err := net.InterfaceByName(interfaceName)
+		if err == nil {
+			continue
+		}
+		if err.Error() == "no such network interface" {
+			return interfaceName, nil
+		}
+	}
+	return "", errors.New("next  interface name not available")
+}
+
 func (h *Handler) setVpn(selectedVpnAddress, privateKey string, response *zeropsVpnProtocol.StartVpnResponse) error {
 	var err error
 
-	interfaceName := "wg0"
+	interfaceName, err := getNewVpnInterfaceName()
+	if err != nil {
+		return err
+	}
 
 	_, err = cmdRunner.Run(exec.Command("ip", "link", "add", interfaceName, "type", "wireguard"))
 	if err != nil {

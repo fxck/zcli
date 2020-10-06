@@ -8,6 +8,7 @@ import (
 	"github.com/zerops-io/zcli/src/cliStorage"
 	"github.com/zerops-io/zcli/src/constants"
 	"github.com/zerops-io/zcli/src/daemonStorage"
+	"github.com/zerops-io/zcli/src/dnsServer"
 	"github.com/zerops-io/zcli/src/grpcApiClientFactory"
 	"github.com/zerops-io/zcli/src/grpcDaemonServer"
 	"github.com/zerops-io/zcli/src/utils/certReader"
@@ -69,6 +70,10 @@ func createApiGrpcClient(ctx context.Context, tlsConfig *tls.Config) (_ zeropsAp
 
 }
 
+func createDnsServer() *dnsServer.Handler {
+	return dnsServer.New()
+}
+
 func createDaemonStorage() (*daemonStorage.Handler, error) {
 	return daemonStorage.New(
 		daemonStorage.Config{
@@ -77,7 +82,7 @@ func createDaemonStorage() (*daemonStorage.Handler, error) {
 	)
 }
 
-func createVpn(storage *daemonStorage.Handler, logger *logger.Handler) *vpn.Handler {
+func createVpn(storage *daemonStorage.Handler, dnsServer *dnsServer.Handler, logger *logger.Handler) *vpn.Handler {
 	return vpn.New(
 		vpn.Config{
 			VpnCheckInterval:   time.Second * 1,
@@ -86,6 +91,7 @@ func createVpn(storage *daemonStorage.Handler, logger *logger.Handler) *vpn.Hand
 		logger,
 		grpcApiClientFactory.New(),
 		storage,
+		dnsServer,
 	)
 }
 
